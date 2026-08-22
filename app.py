@@ -45,13 +45,17 @@ st.markdown(
         opacity: 1 !important;
     }
 
-    /* Border around KPI metric cards */
+    /* Border around KPI metric cards - fixed height so all cards match */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
         border: 2px solid #0a1f44;
         border-radius: 10px;
         padding: 15px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     /* Sidebar collapse/expand button - white circle so the icon is visible either way */
@@ -161,10 +165,10 @@ if page == "Overview":
     c3.metric("False Alarms to Investigate", f"{false_alarms}", f"~${investigation_cost:,.0f} cost")
 
     st.caption(
-        f"Assumes an average fraud transaction of ${avg_fraud_amount:.0f} and "
-        f"${investigation_cost_per_case} analyst cost per flagged case reviewed. "
+        f"Assumes an average fraud transaction of \\${avg_fraud_amount:.0f} and "
+        f"\\${investigation_cost_per_case} analyst cost per flagged case reviewed. "
         f"At the current threshold, the model misses {fraud_missed} fraud cases "
-        f"(~${money_lost_to_missed_fraud:,.0f} in unstopped fraud) in exchange for "
+        f"(~\\${money_lost_to_missed_fraud:,.0f} in unstopped fraud) in exchange for "
         f"{false_alarms} false alarms analysts must review."
     )
 
