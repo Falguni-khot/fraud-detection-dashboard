@@ -71,34 +71,6 @@ if page == "Overview":
     ax2.set_xlabel("Transaction Amount")
     ax2.legend()
     st.pyplot(fig2)
-if page == "Overview":
-    st.title("Financial Fraud Detection Dashboard")
-    st.caption("Overview of transaction data and fraud rates")
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Transactions", f"{metadata['n_rows']:,}")
-    col2.metric("Fraud Rate", f"{metadata['fraud_rate']*100:.2f}%")
-    col3.metric("Fraudulent Transactions", f"{int(metadata['fraud_rate']*metadata['n_rows']):,}")
-
-    st.subheader("Fraud Rate by Merchant Category")
-    fraud_by_cat = df.groupby("Merchant_Category")["Fraudulent"].mean().sort_values(ascending=False)
-    fig, ax = plt.subplots()
-    fraud_by_cat.plot(kind="bar", ax=ax, color="#c0392b")
-    ax.set_ylabel("Fraud rate")
-    ax.set_xlabel("")
-    st.pyplot(fig)
-
-    st.subheader("Transaction Amount: Fraud vs. Legitimate")
-    fig2, ax2 = plt.subplots()
-    df[df["Fraudulent"] == 0]["Transaction_Amount"].plot(
-        kind="hist", bins=40, alpha=0.6, label="Legitimate", ax=ax2, color="#2980b9"
-    )
-    df[df["Fraudulent"] == 1]["Transaction_Amount"].plot(
-        kind="hist", bins=40, alpha=0.6, label="Fraud", ax=ax2, color="#c0392b"
-    )
-    ax2.set_xlabel("Transaction Amount")
-    ax2.legend()
-    st.pyplot(fig2)
 
     # ---- THE BUSINESS IMPACT BLOCK  ----
     st.markdown("---")
