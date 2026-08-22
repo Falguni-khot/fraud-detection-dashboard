@@ -29,16 +29,34 @@ st.markdown(
         font-weight: 700;
     }
 
-    /* Radio button labels (Overview, Explore Data, etc.) */
-    section[data-testid="stSidebar"] label {
-        color: #ffffff !important;
-        font-size: 17px !important;
-    }
-
-    /* "Navigate" small label above the radio options */
+    /* "Navigate" label above the radio options */
     section[data-testid="stSidebar"] .stRadio > label {
         color: #ffffff !important;
-        font-size: 15px !important;
+        font-size: 16px !important;
+    }
+
+    /* All radio option text - make white and bigger */
+    section[data-testid="stSidebar"] div[role="radiogroup"] label p {
+        color: #ffffff !important;
+        font-size: 19px !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
+    }
+
+    /* Ensure the currently selected option's text is fully white and bold */
+    section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        opacity: 1 !important;
+    }
+     /* Border around KPI metric cards */
+    div[data-testid="stMetric"] {
+        background-color: #ffffff;
+        border: 2px solid #0a1f44;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
     }
     </style>
     """,
