@@ -14,7 +14,36 @@ import streamlit as st
 import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Fraud Detection Dashboard", layout="wide")
+st.markdown(
+    """
+    <style>
+    /* Sidebar background - dark navy blue */
+    section[data-testid="stSidebar"] {
+        background-color: #0a1f44;
+    }
 
+    /* Sidebar title ("Fraud Detection" headline) */
+    section[data-testid="stSidebar"] h1 {
+        color: #ffffff;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    /* Radio button labels (Overview, Explore Data, etc.) */
+    section[data-testid="stSidebar"] label {
+        color: #ffffff !important;
+        font-size: 17px !important;
+    }
+
+    /* "Navigate" small label above the radio options */
+    section[data-testid="stSidebar"] .stRadio > label {
+        color: #ffffff !important;
+        font-size: 15px !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 # ---------- Load model artifacts ----------
 @st.cache_resource
 def load_artifacts():
