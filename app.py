@@ -29,16 +29,10 @@ st.markdown(
         font-weight: 700;
     }
 
-    /* "Navigate" label above the radio options */
-    section[data-testid="stSidebar"] .stRadio > label {
-        color: #ffffff !important;
-        font-size: 16px !important;
-    }
-
     /* All radio option text - make white and bigger */
     section[data-testid="stSidebar"] div[role="radiogroup"] label p {
         color: #ffffff !important;
-        font-size: 19px !important;
+        font-size: 16px !important;
         font-weight: 500 !important;
         opacity: 1 !important;
     }
@@ -50,7 +44,8 @@ st.markdown(
         font-weight: 700 !important;
         opacity: 1 !important;
     }
-     /* Border around KPI metric cards */
+
+    /* Border around KPI metric cards */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
         border: 2px solid #0a1f44;
@@ -58,10 +53,25 @@ st.markdown(
         padding: 15px;
         box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
     }
+
+    /* Sidebar collapse/expand button - white circle so the icon is visible either way */
+    button[data-testid="stSidebarCollapseButton"],
+    button[data-testid="stBaseButton-headerNoPadding"],
+    [data-testid="collapsedControl"] button {
+        background-color: #ffffff !important;
+        border-radius: 50% !important;
+    }
+    button[data-testid="stSidebarCollapseButton"] svg,
+    button[data-testid="stBaseButton-headerNoPadding"] svg,
+    [data-testid="collapsedControl"] svg {
+        color: #0a1f44 !important;
+        fill: #0a1f44 !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 # ---------- Load model artifacts ----------
 @st.cache_resource
 def load_artifacts():
@@ -99,16 +109,20 @@ if page == "Overview":
     col2.metric("Fraud Rate", f"{metadata['fraud_rate']*100:.2f}%")
     col3.metric("Fraudulent Transactions", f"{int(metadata['fraud_rate']*metadata['n_rows']):,}")
 
+    st.markdown("---")
+
     st.subheader("Fraud Rate by Merchant Category")
     fraud_by_cat = df.groupby("Merchant_Category")["Fraudulent"].mean().sort_values(ascending=False)
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 2.4))
     fraud_by_cat.plot(kind="bar", ax=ax, color="#c0392b")
     ax.set_ylabel("Fraud rate")
     ax.set_xlabel("")
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
+
+    st.markdown("---")
 
     st.subheader("Transaction Amount: Fraud vs. Legitimate")
-    fig2, ax2 = plt.subplots()
+    fig2, ax2 = plt.subplots(figsize=(6, 3.3))
     df[df["Fraudulent"] == 0]["Transaction_Amount"].plot(
         kind="hist", bins=40, alpha=0.6, label="Legitimate", ax=ax2, color="#2980b9"
     )
@@ -117,10 +131,11 @@ if page == "Overview":
     )
     ax2.set_xlabel("Transaction Amount")
     ax2.legend()
-    st.pyplot(fig2)
+    st.pyplot(fig2, use_container_width=False)
 
     # ---- THE BUSINESS IMPACT BLOCK  ----
     st.markdown("---")
+
     st.subheader("Business Impact")
 
     avg_fraud_amount = df[df["Fraudulent"] == 1]["Transaction_Amount"].mean()
@@ -152,7 +167,7 @@ if page == "Overview":
         f"(~${money_lost_to_missed_fraud:,.0f} in unstopped fraud) in exchange for "
         f"{false_alarms} false alarms analysts must review."
     )
-    
+
 # ============================================================
 # PAGE 2: EXPLORE DATA
 # ============================================================
@@ -173,10 +188,10 @@ elif page == "Explore Data":
         width='stretch',
     )
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 3))
     fraud_by_dim["Fraud Rate"].plot(kind="bar", ax=ax, color="#8e44ad")
     ax.set_ylabel("Fraud rate")
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
 
     st.subheader("Raw data sample")
     st.dataframe(df.sample(20, random_state=1), width='stretch')
@@ -201,9 +216,11 @@ elif page == "Model Performance":
         "these matter far more than overall accuracy on an imbalanced dataset like this one."
     )
 
+    st.markdown("---")
+
     st.subheader("Confusion Matrix")
     cm = np.array(results["confusion_matrix"])
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 3.5))
     ax.imshow(cm, cmap="Blues")
     for i in range(2):
         for j in range(2):
@@ -212,32 +229,36 @@ elif page == "Model Performance":
     ax.set_yticks([0, 1])
     ax.set_xticklabels(["Predicted: Legit", "Predicted: Fraud"])
     ax.set_yticklabels(["Actual: Legit", "Actual: Fraud"])
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False)
+
+    st.markdown("---")
 
     col_a, col_b = st.columns(2)
     with col_a:
         st.subheader("Precision-Recall Curve")
-        fig2, ax2 = plt.subplots()
+        fig2, ax2 = plt.subplots(figsize=(6, 6))
         ax2.plot(metadata["pr_curve"]["recall"], metadata["pr_curve"]["precision"])
         ax2.set_xlabel("Recall")
         ax2.set_ylabel("Precision")
-        st.pyplot(fig2)
+        st.pyplot(fig2, use_container_width=False)
 
     with col_b:
         st.subheader("ROC Curve")
-        fig3, ax3 = plt.subplots()
+        fig3, ax3 = plt.subplots(figsize=(6, 6))
         ax3.plot(metadata["roc_curve"]["fpr"], metadata["roc_curve"]["tpr"])
         ax3.plot([0, 1], [0, 1], linestyle="--", color="gray")
         ax3.set_xlabel("False Positive Rate")
         ax3.set_ylabel("True Positive Rate")
-        st.pyplot(fig3)
+        st.pyplot(fig3, use_container_width=False)
+
+    st.markdown("---")
 
     st.subheader("Top Features Driving Predictions")
     top_features = metadata["feature_importance"][:10]
     feat_df = pd.DataFrame(top_features, columns=["Feature", "Importance"])
-    fig4, ax4 = plt.subplots()
+    fig4, ax4 = plt.subplots(figsize=(6, 5))
     ax4.barh(feat_df["Feature"][::-1], feat_df["Importance"][::-1], color="#27ae60")
-    st.pyplot(fig4)
+    st.pyplot(fig4, use_container_width=False)
 
 # ============================================================
 # PAGE 4: LIVE PREDICTION
