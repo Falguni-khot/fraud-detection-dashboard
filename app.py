@@ -161,7 +161,7 @@ if page == "Overview":
 
     c1, c2, c3 = st.columns(3)
     c1.metric("Fraud Caught", f"{fraud_caught} / {fraud_count}", f"{recall*100:.0f}% recall")
-    c2.metric("Estimated Value Saved", f"${money_saved:,.0f}")
+    c2.metric("Estimated Value Saved",f"${money_saved:,.0f}")
     c3.metric("False Alarms to Investigate", f"{false_alarms}", f"~${investigation_cost:,.0f} cost")
 
     st.caption(
